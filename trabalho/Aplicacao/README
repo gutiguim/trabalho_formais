@@ -1,0 +1,53 @@
+Universidade Federal de Santa Catarina
+Departamento de Informática e Estatística
+
+Gustavo Ferreira Guimarães
+13 de maio de 2019
+
+Neste trabalho foi utilizada a linguagem de programação Javascript no BackEnd e no FrontEnd foram utilizados as linguagens de marcação HTML e CSS.
+
+
+Sobre a modelagem:
+Para a padronização do trabalho, todas as Gramáticas, Autômatos e futuramente Expressões Regulares são salvas usando JSON.
+O trabalho conta com 3 arrays com todos os elementos de cada tipo, um array com todas as Gramáticas, um com todos os Autômatos e um com todos as Expressões Regulares.
+
+Um Autômato está no formato de array com Objetos internos representando sua estrutura:
+
+  dfa[0] = {'statename': '0', 'a': '0', 'b': '1', 'final': ''};
+  dfa[1] = {'statename': '1', 'a': '1', 'b': '0', 'final': 's'};
+
+Um Gramática está no formato de array com Objetos internos representando sua estrutura:
+
+  rg[0] = {"leftside": '0', "rightside": 'a0|b1|b', "statename": '0'};
+  rg[1] = {"leftside": '1', "rightside": 'a1|a|b0', "statename": '1'};
+
+  Para facilitar as transformações o trabalho conta com uma função para retirar os espaços em branco (caso o usuário digite) e separando os elementos pelo elemento "|":
+
+    rg[0] = {"leftside": '0', "0": "a0", "1": "b1", "2": "b", "statename": '0'};
+    rg[1] = {"leftside": '1', "0": "a1", "1": "a", "2": "b0", "statename": '1'};
+
+Uma Expressão Regular por enquanto está sendo salva como o usuário digitou.
+
+
+Funcionamento:
+
+Quando um Autômato é criado e salvo ele é automaticamente convertido em Gramática e quando uma Gramática é criada ela é automaticamente convertida em Autômato 
+Finito Não Definido. Por enquanto a funcionalidade de converta Autômato Finito Não Definido em Autômato Finito Definido.
+
+Para executar o programa você deverá abrir o arrquivo "index.html" no navegador de sua escolha.
+
+Criação de autômato:
+Para criar um Autômato você deve informar o número de estados e o número de terminais e clicar no botão "Generate Table", após a tabela ser gerada você 
+deverá preencher os campos destinados ao seu Autômato, sempre respeitando o nome dos estados gerados.
+
+Ao finalizar o preenchimento da tabela clique em salvar e seu Autômato será salvo no programa, convertido para Gramática Regular e esta última, também salva no programa.
+
+Criação de Gramática Regular:
+Para criar uma Gramática Regular você deve informar o número de produções e o número de terminais e clicar no botão "Generate Table" (caso você vá gerar uma gramática
+não fatorada, ou seja, com dois símbolos terminais iguais a esquerda de produções diferentes, cliquei no "check" do "Is it not factored?"), após a tabela ser gerada você 
+deverá preencher os campos destinados a sua gramática, sempre respeitando o nome dos estados gerados.
+
+Ao finalizar o preenchimento da tabela clique em salvar e sua Gramática será salva no programa, convertido para AFND e este último, também salvo no programa.
+
+Criação de Expressão Regular:
+Escrever a sua Expressão Regular no campo "Regular Expression" and click save.

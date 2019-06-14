@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<head>
+  <html lang="en">
+  <title>Gutavo Ferreira Guimarães</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- My css's -->
+  <link rel="stylesheet" type="text/css" href="index.css" />
+
+  <style>
+  html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif;}
+  .w3-sidebar {
+    z-index: 3;
+    width: 150px;
+    top: 0px;
+    bottom: 0;
+    height: inherit;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <!-- <div class="w3-top">
+    <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+      <a class="w3-bar-item w3-button w3-right w3-hide-large w3-hover-white w3-large w3-theme-l1" href="javascript:void(0)" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+      <a href="#" class="w3-bar-item w3-button w3-theme-l1">Logo</a>
+      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">About</a>
+      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Values</a>
+      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">News</a>
+      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Contact</a>
+      <a href="#" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Clients</a>
+      <a href="#" class="w3-bar-item w3-button  w3-hover-white">Partners</a>
+    </div>
+  </div> -->
+
+  <!-- Sidebar -->
+  <!-- <nav class="w3-sidebar w3-bar-block w3-collapse w3-large w3-theme w3-animate-left" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-right w3-xlarge w3-padding-large w3-hover-black w3-hide-large" title="Close Menu">
+      <i class="fa fa-remove"></i>
+    </a>
+    <h4 class="w3-bar-item"><b>Menu</b></h4>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+    <a class="w3-bar-item w3-button w3-hover-white" href="#">Anchor</a>
+  </nav> -->
+
+  <!-- Overlay effect when opening sidebar on small screens -->
+  <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+  <!-- Main content: shift it to the right by 250 pixels when the sidebar is visible -->
+  <!-- <div class="w3-main" style="margin-left:150px"> -->
+
+
+
+    <!-- <div class="w3-row w3-padding-32">
+      <div class="w3-twothird w3-container">
+        <div>
+          <button type="button" class="btn btn-primary btn-lg" onclick="testFiniteAutomateSentence()">Test Finite Automate Sentence</button>
+          <button type="button" class="btn btn-primary btn-lg">Test2</button>
+          <button type="button" class="btn btn-primary btn-lg">Test3</button>
+        </div>
+      </div>
+      <div class="w3-third w3-container">
+        
+      </div>
+    </div> -->
+
+
+
+    <div class="w3-row w3-padding-32">
+      <div class="w3-twothird w3-container">
+        <h1 class="w3-text-teal">Add FA</h1>
+        <a>(If there is no transition or it isn't final, leave it blank)</a><br>
+        Number of States: <input type="number" name="states" value="0" id="input_states">
+        Number of Alphabet letters: <input type="number" name="alphabet" value="0" id="input_alphabet">
+        <!-- Is it NDFA? <input type="checkbox" name="ndfa" id="ndfa"> -->
+        <button type="button" class="btn btn-primary" onclick="generateFATable()">Generate Table</button><br>
+      
+        <div class="padding-top-16"></div>
+
+        <table class="table table-bordered" id="af_table">
+
+        </table>
+
+        <div class="padding-top-16"></div>
+
+        <div>
+          Name: <input type="text" name="name_fa" value="" id="input_name_fa">
+          <button type="button" class="btn btn-primary btn-lg" onclick="saveFA()">Save</button>
+          <!-- <button type="button" class="btn btn-primary btn-lg">AFND To AFD</button> -->
+          <!-- <button type="button" class="btn btn-primary btn-lg">AFD To RG</button> -->
+        </div>
+      </div>
+      <!-- <div class="w3-third w3-container">
+        
+      </div> -->
+    </div>
+
+    <div class="w3-row w3-padding-32">
+      <div class="w3-twothird w3-container">
+        <h1 class="w3-text-teal">Recognize sentence on FA</h1>
+          Expression: <input type="text" name="expression_to_be_recognized" value="" id="input_expression_to_be_recognized">
+          
+          <div class="padding-top-16"></div>
+
+          <button type="button" class="btn btn-primary btn-lg" onclick="checkIfBelongsToFA()">Check</button>
+      </div>
+      <!-- <div class="w3-third w3-container">
+        <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
+        <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
+      </div> -->
+    </div>
+
+    <div class="w3-row w3-padding-32">
+      <div class="w3-twothird w3-container">
+        <h1 class="w3-text-teal">Minimize DFA</h1>
+          Select the DFA to be minimized: <select id="dfa_to_be_minimized"></select>
+          
+          <div class="padding-top-16"></div>
+
+          <button type="button" class="btn btn-primary btn-lg" onclick="minimizeDFA()">Minimize</button>
+      </div>
+      <!-- <div class="w3-third w3-container">
+        <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
+        <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
+      </div> -->
+    </div>
+
+    <div class="w3-row w3-padding-32">
+      <div class="w3-twothird w3-container">
+        <h1 class="w3-text-teal">DFA Union</h1>
+          Select the first DFA: <select id="dfa_union_1"></select>
+          Select the second DFA: <select id="dfa_union_2"></select>
+          
+          <div class="padding-top-16"></div>
+
+          <button type="button" class="btn btn-primary btn-lg" onclick="dfaUnion()">Minimize</button>
+      </div>
+      <!-- <div class="w3-third w3-container">
+        <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
+        <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
+      </div> -->
+    </div>
+
+    <div class="w3-row w3-padding-32">
+      <div class="w3-twothird w3-container">
+        <h1 class="w3-text-teal">Add RG</h1>
+        <a>(Use "epsilon" as "&" and "or" as "|")</a><br>
+        Number of Productions: <input type="number" name="productions" value="0" id="input_left_side">
+        Number of Alphabet letters: <input type="number" name="rg_alphabet" value="0" id="input_rg_alphabet">
+        Is it not factored? <input type="checkbox" name="rg_ndfa" id="rg_ndfa">
+        <button type="button" class="btn btn-primary" onclick="generateRGRows()">Generate Rows</button><br>
+        
+        <div class="padding-top-16"></div>
+
+        <table class="table table-bordered" id="rg_table">
+
+        </table>
+
+        <div class="padding-top-16"></div>
+
+        <div>
+          Name: <input type="text" name="name_rg" value="" id="input_name_rg">
+          <button type="button" class="btn btn-primary btn-lg" onclick="saveRG()">Save</button>
+        </div>
+      </div>
+      <!-- <div class="w3-third w3-container">
+        
+      </div> -->
+    </div>
+
+    <div class="w3-row w3-padding-32">
+      <div class="w3-twothird w3-container">
+        <h1 class="w3-text-teal">Add RE</h1>
+        <a>(Use "or" as "|" and "star operator" as "*")</a><br>
+          Regular Expression: <input type="text" name="regular_expression" value="" id="input_regular_expression">
+          
+          <div class="padding-top-16"></div>
+
+          <button type="button" class="btn btn-primary btn-lg" onclick="saveRE()">Save</button>
+      </div>
+      <!-- <div class="w3-third w3-container">
+        <p class="w3-border w3-padding-large w3-padding-32 w3-center">AD</p>
+        <p class="w3-border w3-padding-large w3-padding-64 w3-center">AD</p>
+      </div> -->
+    </div>
+
+    <footer id="myFooter">
+      <div class="w3-container w3-theme-l2 w3-padding-32">
+        <h4>Gustavo Ferreira Guimarães - 11200638</h4>
+      </div>
+
+      <div class="w3-container w3-theme-l1">
+        <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+      </div>
+    </footer>
+
+  <!-- END MAIN -->
+  </div>
+
+  <script src="index.js"></script>
+
+  <!-- Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>
