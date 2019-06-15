@@ -615,7 +615,161 @@ function dfaUnion() {
   let dfa2 = array_all_FA[selected2];
 
   // DELETAR
+  // dfa1 = [
+  //   {
+  //     statename: '0',
+  //     a: '0',
+  //     b: '1',
+  //     final: 's'
+  //   },
+  //   {
+  //     statename: '1',
+  //     a: '1',
+  //     b: '1',
+  //     final: 's'
+  //   },
+  // ]
+
+  // dfa2 = [
+  //   {
+  //     statename: '0',
+  //     a: '1',
+  //     b: '0',
+  //     c: '0',
+  //     final: ''
+  //   },
+  //   {
+  //     statename: '1',
+  //     a: '1',
+  //     b: '1',
+  //     c: '2',
+  //     final: ''
+  //   },
+  //   {
+  //     statename: '2',
+  //     a: '2',
+  //     b: '2',
+  //     c: '2',
+  //     final: 's'
+  //   },
+  // ]
+  // DELETAR
+
+  let number_of_alphabet1 = 0;
+  let number_of_alphabet2 = 0;
+
+  let leaderLength = (dfa1.length >= dfa2.length) ? dfa1.length : dfa2.length;
+
+  for (var key in dfa1[0]) {
+    if (dfa1[0].hasOwnProperty(key)) {
+      if(key != 'statename' && key != 'final'){
+        number_of_alphabet1++;
+      }
+    }
+  }
+
+  for (var key in dfa2[0]) {
+    if (dfa2[0].hasOwnProperty(key)) {
+      if(key != 'statename' && key != 'final'){
+        number_of_alphabet2++;
+      }
+    }
+  }
+
+  let leaderNumberOfAlphabet;
+
+  if (number_of_alphabet1 >= number_of_alphabet2) {
+    leaderNumberOfAlphabet = number_of_alphabet1;
+
+    let letter = '';
+    for (let index = number_of_alphabet2; index < number_of_alphabet1; index++) {
+      letter = alphabet[index];
+      for (let inside_index = 0; inside_index < dfa2.length; inside_index++) {
+        dfa2[inside_index] = { ...dfa2[inside_index], letter: ''};
+      }
+        
+    }
+  } else {
+    leaderNumberOfAlphabet = number_of_alphabet2;
+
+    let letter = '';
+    for (let index = number_of_alphabet1; index < number_of_alphabet2; index++) {
+      letter = alphabet[index];
+      console.log("Letter: " + letter);
+      // dfa1 = { ...dfa1, letter: ''}; 
+      for (let inside_index = 0; inside_index < dfa1.length; inside_index++) {
+        dfa1[inside_index] = { ...dfa1[inside_index], [letter]: ''};
+      }   
+    }
+  }
   
+  let union = [];
+  for (let index = 0; index < (dfa1.length + dfa2.length + 1); index++) {
+    union[index] = {};
+    union[index]['statename'] = index;
+    union[index]['final'] = false;
+    for (let inside_index = 0; inside_index < leaderNumberOfAlphabet; inside_index++) {
+      union[index][alphabet[inside_index]] = '';
+    }
+  }
+
+  for (let index = 0; index < (leaderLength); index++) {
+    if(dfa1[index]){  
+      union[index+1] = dfa1[index]
+    }
+    if(dfa2[index]) {
+      union[index+1+dfa1.length] = dfa2[index];
+    }
+  }
+
+  for (var key in dfa1[0]) {
+    if (dfa1[0].hasOwnProperty(key)) {
+      if(key != 'statename'){
+        if(key == 'final' && dfa1[0]['final']) {
+          union[0]['final'] = 's';
+        }0
+        if(key != 'final') {
+          union[0][key] = dfa1[0][key];
+        }
+      }
+    }
+  }
+
+  for (var key in dfa2[0]) {
+    if (dfa2[0].hasOwnProperty(key)) {
+      if(key != 'statename'){
+        if(key == 'final' && dfa2[0]['final']) {
+          union[0]['final'] = 's';
+        }
+        if(key != 'final') {
+          if(union[0][key]){
+            union[0][key] += ',' + dfa2[0][key];
+          } else {
+            union[0][key] = dfa2[0][key];
+          }
+        }
+      }
+    }
+  }
+
+  array_all_FA.push(union);
+  array_name.push(array_name[selected1] + "UnionWith" + array_name[selected2]);
+  addToSelector();
+}
+// DFA UNION END
+// DFA INTERSECTION BEGIN
+function dfaIntersection() {
+  console.log("INTERSECTION")  
+  let selector1 = document.getElementById('dfa_union_1');
+  let selector2 = document.getElementById('dfa_union_2');
+  let selected1 = selector1.selectedIndex;
+  let selected2 = selector2.selectedIndex;
+
+  let dfa1 = array_all_FA[selected1];
+  let dfa2 = array_all_FA[selected2];
+  console.log(dfa1);
+
+  // DELETAR
   dfa1 = [
     {
       statename: '0',
@@ -629,13 +783,17 @@ function dfaUnion() {
       b: '1',
       final: 's'
     },
-  ]
+  ];
+
+  console.log("DFA1");
+  console.log(dfa1);
+
 
   dfa2 = [
     {
       statename: '0',
-      a: '0',
-      b: '1',
+      a: '1',
+      b: '0',
       c: '0',
       final: ''
     },
@@ -653,7 +811,7 @@ function dfaUnion() {
       c: '2',
       final: 's'
     },
-  ]
+  ];
   // DELETAR
 
   let number_of_alphabet1 = 0;
@@ -661,22 +819,18 @@ function dfaUnion() {
 
   let leaderLength = (dfa1.length >= dfa2.length) ? dfa1.length : dfa2.length;
 
-  for (let index = 0; index < dfa1.length; index++) {
-    for (var key in dfa1[index]) {
-      if (dfa1[index].hasOwnProperty(key)) {
-        if(key != 'statename' && key != 'final'){
-          number_of_alphabet1++;
-        }
+  for (var key in dfa1[0]) {
+    if (dfa1[0].hasOwnProperty(key)) {
+      if(key != 'statename' && key != 'final'){
+        number_of_alphabet1++;
       }
     }
   }
 
-  for (let index = 0; index < dfa2.length; index++) {
-    for (var key in dfa2[index]) {
-      if (dfa2[index].hasOwnProperty(key)) {
-        if(key != 'statename' && key != 'final'){
-          number_of_alphabet2++;
-        }
+  for (var key in dfa2[0]) {
+    if (dfa2[0].hasOwnProperty(key)) {
+      if(key != 'statename' && key != 'final'){
+        number_of_alphabet2++;
       }
     }
   }
@@ -684,12 +838,15 @@ function dfaUnion() {
   let leaderNumberOfAlphabet;
 
   if (number_of_alphabet1 >= number_of_alphabet2) {
-    leaderNumberOfAlphabet = number_of_alphabet1;
+    leaderNumberOfAlphabet;
 
     let letter = '';
     for (let index = number_of_alphabet2; index < number_of_alphabet1; index++) {
       letter = alphabet[index];
-      dfa2 = { ...dfa2, letter: ''};    
+      for (let inside_index = 0; inside_index < dfa2.length; inside_index++) {
+        dfa2[inside_index] = { ...dfa2[inside_index], letter: ''};
+      }
+        
     }
   } else {
     leaderNumberOfAlphabet = number_of_alphabet2;
@@ -697,43 +854,79 @@ function dfaUnion() {
     let letter = '';
     for (let index = number_of_alphabet1; index < number_of_alphabet2; index++) {
       letter = alphabet[index];
-      dfa1 = { ...dfa1, letter: ''};    
+      console.log(letter);
+      for (let inside_index = 0; inside_index < dfa1.length; inside_index++) {
+        dfa1[inside_index] = { ...dfa1[inside_index], [letter]: ''};
+      }   
     }
   }
 
+  number_of_alphabet1 = leaderNumberOfAlphabet;
+  number_of_alphabet2 = leaderNumberOfAlphabet;
+  
+  console.log("DFA1");
   console.log(dfa1);
+  console.log("DFA2");
   console.log(dfa2);
 
-  // let union = [];
-  // for (let index = 0; index < (dfa1.length + dfa2.length + 1); index++) {
-  //   union[index]['statename'] = index;
-  //   union[index]['final'] = false;
-  //   for (let inside_index = 0; inside_index < leaderNumberOfAlphabet; inside_index++) {
-  //     union[index][alphabet[inside_index]] = '';
-  //   }
-  // }
+  complement(dfa1, number_of_alphabet1);
+  complement(dfa2, number_of_alphabet2);
 
-  // for (let index = 0; index < (leaderLength); index++) {
-  //   if(dfa1[index]){  
-  //     union[index+1] = dfa1[index]
-  //   }
-  //   if(dfa2[index]) {
-  //     union[index+dfa1.length] = dfa2[index];
-  //   }
-    
-  // }
 
-  // for (var key in dfa1[0]) {
-  //   if (dfa1[index].hasOwnProperty(key)) {
-  //     if(key != 'statename'){
-  //       if(key == 'final' && dfa1['final'] == true) {
-  //         union[0]['final'] = true;
-  //       }
-  //       if(key != 'final') {
-  //         union[0][key] = dfa1[index][key];
-  //       }
-  //     }
-  //   }
-  // }
+  // array_all_FA.push(intersection);
+  // array_name.push(array_name[selected1] + "IntersectionWith" + array_name[selected2]);
+  // addToSelector();
 }
-// DFA UNION END
+// DFA INTERSECTION END
+// DFA COMPLEMENT BEGIN
+function complement(fa, number_of_alphabet) {
+  // @TODO Fazer um método para transformar de ndfa em dfa
+    // dfa = transformNDFAToDFA(fa);
+    dfa = fa;
+  
+  dfa = makeDFATotal(dfa, number_of_alphabet);
+
+  for (let index = 0; index < dfa.length; index++) {
+    if(dfa[index]['final'] != '') {
+      dfa[index]['final'] = 's';
+    } else {
+      dfa[index]['final'] = '';
+    }
+  }
+
+  console.log('COMPLEMENT');
+  console.log(dfa);
+}
+// DFA COMPLEMENT END
+// DFA TOTAL BEGIN
+function makeDFATotal(dfa, number_of_alphabet) {
+  let newStateCreated = false;
+  let dfaPossibleNewStatePosition = dfa.length;
+
+  for (let index = 0; index < dfa.length; index++) {
+    
+    for (var key in dfa[index]) {
+      if (dfa[index].hasOwnProperty(key)) {
+        if(key != 'statename' && key != 'final'){
+          if(dfa[index][key] == '' && !newStateCreated) {
+
+            dfa[dfaPossibleNewStatePosition] = {statename: ''+dfaPossibleNewStatePosition, final: ''};
+            for (let inside_index = 0; inside_index < number_of_alphabet; inside_index++) {
+              letter = alphabet[inside_index];
+              dfa[dfaPossibleNewStatePosition] = { ...dfa[dfaPossibleNewStatePosition], [letter]: ''};
+            }
+
+            newStateCreated = true;
+          }
+
+          if(dfa[index][key] == '') {
+            dfa[index][key] = dfa[dfaPossibleNewStatePosition]['statename'];
+          }
+        }
+      }
+    }
+  }
+
+  return dfa;
+}
+// DFA TOTAL END
