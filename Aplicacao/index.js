@@ -231,8 +231,10 @@ function transformDFAIntoRG(dfa){
   return RG;
 }
 
-function checkIfBelongsToFA(index = array_all_FA.length){
-  // @TODO Pegar de um seletor entre os nomes dos FA's o index e adicionar na variável index
+function checkIfBelongsToFA(){
+
+  let selector = document.getElementById('dfa_recognize_sentence');
+  let index = selector.selectedIndex;
 
   const sentence = document.getElementById('input_expression_to_be_recognized').value;
   const finite_automate = array_all_FA[index];
@@ -472,7 +474,14 @@ function tableToJson(table) {
 }
 
 function addToSelector(){
-  let select = document.getElementById('dfa_to_be_minimized');
+  addToSelector('dfa_to_be_minimized');
+  addToSelector('dfa_recognize_sentence');
+  addToSelector('dfa_union_1');
+  addToSelector('dfa_union_2');
+}
+
+function addToSelector(nameOfSelector) {
+  let select = document.getElementById(nameOfSelector);
 
   var opt = array_name[array_name.length-1];
   var el = document.createElement("option");
@@ -480,6 +489,7 @@ function addToSelector(){
   el.value = opt;
   select.appendChild(el);
 }
+
 // GENERAL FUNCTIONS END
 
 // DFA MINIMIZATION BEGIN
@@ -607,6 +617,8 @@ function dfaUnion() {
   let number_of_alphabet1 = 0;
   let number_of_alphabet2 = 0;
 
+  let leaderLength = (dfa1.length >= dfa2.length) ? dfa1.length : dfa2.length;
+
   for (let index = 0; index < dfa1.length; index++) {
     for (var key in dfa1[index]) {
       if (dfa1[index].hasOwnProperty(key)) {
@@ -627,6 +639,30 @@ function dfaUnion() {
     }
   }
 
+  let leaderNumberOfAlphabet = (number_of_alphabet1 >= number_of_alphabet2) ? number_of_alphabet1 : number_of_alphabet2;
+
   let union = [];
+  for (let index = 0; index < (dfa1.length + dfa2.length + 1); index++) {
+    union[index]['statename'] = index;
+    union[index]['final'] = false;
+    for (let inside_index = 0; inside_index < leaderNumberOfAlphabet; inside_index++) {
+      union[index][alphabet[inside_index]] = '';
+    }
+  }
+
+  for (let index = 0; index < leaderLength; index++) {
+    if(dfa1[index]) {
+      
+      for (var key in dfa1[index]) {
+        if (dfa2[index].hasOwnProperty(key)) {
+          if(key != 'statename' && key != 'final'){
+            number_of_alphabet2++;
+          }
+        }
+      }
+
+    }
+  }
+
 }
 // DFA UNION END
