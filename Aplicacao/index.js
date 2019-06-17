@@ -29,6 +29,7 @@ function w3_close() {
 var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
 var array_all_FA = [];
 var array_all_RG = [];
+var array_all_CFG = [];
 var array_all_RE = [];
 var array_name = [];
 
@@ -474,13 +475,13 @@ function tableToJson(table) {
 }
 
 function addToSelector(){
-  addToSelector('dfa_to_be_minimized');
-  addToSelector('dfa_recognize_sentence');
-  addToSelector('dfa_union_1');
-  addToSelector('dfa_union_2');
+  addToSelectorName('dfa_to_be_minimized');
+  addToSelectorName('dfa_recognize_sentence');
+  addToSelectorName('dfa_union_1');
+  addToSelectorName('dfa_union_2');
 }
 
-function addToSelector(nameOfSelector) {
+function addToSelectorName(nameOfSelector) {
   let select = document.getElementById(nameOfSelector);
 
   var opt = array_name[array_name.length-1];
@@ -517,9 +518,9 @@ function minimizeDFA(){
           if (dfaCheckAccessible[index].hasOwnProperty(key)) {
             if(key != 'statename' && key != 'accessible' && key != 'final'){
               const nextState = dfaCheckAccessible[index][key];
-              if(nextState != '' && dfaCheckAccessible[nextState]['accessible'] == false){
-                dfaCheckAccessible[nextState]['accessible'] = true;
-                stateChanged = true;
+                if(nextState != '' && dfaCheckAccessible[nextState]['accessible'] == false){
+                  dfaCheckAccessible[nextState]['accessible'] = true;
+                  stateChanged = true;
               }
             }
           }
@@ -605,14 +606,18 @@ function minimizeDFA(){
 // DFA MINIMIZATION END
 
 // DFA UNION BEGIN
-function dfaUnion() {
+function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
   let selector1 = document.getElementById('dfa_union_1');
   let selector2 = document.getElementById('dfa_union_2');
   let selected1 = selector1.selectedIndex;
   let selected2 = selector2.selectedIndex;
 
-  let dfa1 = array_all_FA[selected1];
-  let dfa2 = array_all_FA[selected2];
+  if(dfa1 == undefined){
+    dfa1 = array_all_FA[selected1];
+  }
+  if(dfa2 == undefined){
+    dfa2 = array_all_FA[selected2];
+  }
 
   // DELETAR
   // dfa1 = [
@@ -754,12 +759,15 @@ function dfaUnion() {
 
   array_all_FA.push(union);
   array_name.push(array_name[selected1] + "UnionWith" + array_name[selected2]);
+  console.log("A");
   addToSelector();
+  console.log("B");
+
+  return union;
 }
 // DFA UNION END
 // DFA INTERSECTION BEGIN
 function dfaIntersection() {
-  console.log("INTERSECTION")  
   let selector1 = document.getElementById('dfa_union_1');
   let selector2 = document.getElementById('dfa_union_2');
   let selected1 = selector1.selectedIndex;
@@ -787,6 +795,7 @@ function dfaIntersection() {
 
   console.log("DFA1");
   console.log(dfa1);
+  // TODO ACONTECENDO BUG?!?!?!?!?!?!?!?!?!?
 
 
   dfa2 = [
@@ -869,13 +878,24 @@ function dfaIntersection() {
   console.log("DFA2");
   console.log(dfa2);
 
-  complement(dfa1, number_of_alphabet1);
-  complement(dfa2, number_of_alphabet2);
+  let complementDfa1 = complement(dfa1, number_of_alphabet1);
+  let complementDfa2 = complement(dfa2, number_of_alphabet2);
+  // NOT WORKING BEYOND THIS, NEED TO TRANSFORM NDFA INTO DFA
 
+  // let unionComplement = dfaUnion(complementDfa1, complementDfa2);
+  // let unionComplementMinimized = minimizeDFA(unionComplement);
+
+  // let intersection = complement(unionComplementMinimized);
+  // NOT WORKING BEFORE THIS, NEED TO TRANSFORM NDFA INTO DFA
+
+  console.log(intersection);
+  // TODO TEST INTERSECTION
 
   // array_all_FA.push(intersection);
   // array_name.push(array_name[selected1] + "IntersectionWith" + array_name[selected2]);
   // addToSelector();
+
+  // return intersection;
 }
 // DFA INTERSECTION END
 // DFA COMPLEMENT BEGIN
@@ -888,14 +908,13 @@ function complement(fa, number_of_alphabet) {
 
   for (let index = 0; index < dfa.length; index++) {
     if(dfa[index]['final'] != '') {
-      dfa[index]['final'] = 's';
-    } else {
       dfa[index]['final'] = '';
+    } else {
+      dfa[index]['final'] = 's';
     }
   }
 
-  console.log('COMPLEMENT');
-  console.log(dfa);
+  return dfa;
 }
 // DFA COMPLEMENT END
 // DFA TOTAL BEGIN
@@ -930,3 +949,87 @@ function makeDFATotal(dfa, number_of_alphabet) {
   return dfa;
 }
 // DFA TOTAL END
+
+
+// CGF FUNCTIONS BEGIN
+
+// This functions create a visual table of an empty Context Free Grammar
+function generateCFGRows(){
+
+  // Building columns
+  let number_of_alphabet = document.getElementById('input_left_side_cfg').value;
+
+  let table = document.getElementById('cfg_table');
+  let thead = table.createTHead();
+  let row = thead.insertRow();
+
+  let first_th = document.createElement("th");
+  first_th.className+="col-md-auto";
+  let first_text = document.createTextNode("LeftSideCFG");
+  first_th.appendChild(first_text);
+  row.appendChild(first_th);
+
+  let th = document.createElement("th");
+  th.className+="col-md-auto";
+  let text = document.createTextNode("RightSideCFG");
+  th.appendChild(text);
+  row.appendChild(th);   
+
+  // Building rows
+  for (let index = 0; index < number_of_alphabet; index++) {
+      let row = table.insertRow(); 
+      for (let j = 0; j < 2; j++) {
+          let cell = row.insertCell();
+          if(j == 0){
+            text = document.createTextNode(index);
+          } else {
+            text = document.createTextNode("");
+            cell.contentEditable = true;
+          }
+          cell.appendChild(text);
+      }
+  }
+}
+
+function saveCFG() {
+  let name = document.getElementById('input_name_cfg').value;
+  if(name.length == 0){
+    alert("Don't forget to name your CFG, please");
+    return;
+  }
+
+  let table = document.getElementById('cfg_table');
+  let data = tableToJson(table);
+
+  // Each "|" will have an own property on the RG_corrected array of objects
+  let CFG_corrected = correctCFG(data);
+  // let PDA = transformCFGIntoPDA(CFG_corrected);
+
+  // array_all_RG.push(CFG_corrected);
+  // array_name.push(name);
+  // addToSelector();
+
+  console.log(CFG_corrected);
+  
+  console.log(array_all_CFG);
+  console.log(array_name);
+}
+
+// Cleans the CFG -> Remove whitespaces and separate it on object properties
+function correctCFG(data){
+  let corrected_cfg = data;
+  const length = document.getElementById("input_left_side_cfg").value;
+  for (let index = 0; index < length; index++) {
+    // Removing spaces
+    let replace = data[index]["rightsidecfg"].replace(/\s/g,'');
+    
+    // Making properties out of the right site
+    let replace_array = replace.split("|");
+    for (let replace_index = 0; replace_index < replace_array.length; replace_index++) {
+      corrected_cfg[index][replace_index.toString()] = replace_array[replace_index];
+    }
+    delete corrected_cfg[index]["rightsidecfg"];
+  }
+
+  return corrected_cfg;
+}
