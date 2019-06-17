@@ -29,9 +29,12 @@ function w3_close() {
 var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'];
 var array_all_FA = [];
 var array_all_RG = [];
-var array_all_CFG = [];
-var array_all_RE = [];
 var array_name = [];
+
+var array_all_RE = [];
+
+var array_all_CFG = [];
+var array_name_CFG = [];
 
 // FINITE AUTOMATE FUNCTIONS BEGIN
 // This function generate a representations of an empty Finite Automaton 
@@ -49,12 +52,12 @@ function generateFATable(){
     first_th.appendChild(first_text);
     row.appendChild(first_th);
 
-    // if(document.getElementById('ndfa').checked){
-    //   let epsilon_th = document.createElement("th");
-    //   let epsilon_text = document.createTextNode("Epsilon");
-    //   epsilon_th.appendChild(epsilon_text);
-    //   row.appendChild(epsilon_th);
-    // }
+    if(document.getElementById('ndfa').checked){
+      let epsilon_th = document.createElement("th");
+      let epsilon_text = document.createTextNode("Epsilon");
+      epsilon_th.appendChild(epsilon_text);
+      row.appendChild(epsilon_th);
+    }
 
     for (let index = 0; index < number_of_alphabet; index++) {
         let th = document.createElement("th");
@@ -72,9 +75,9 @@ function generateFATable(){
     // Building rows
     let number_of_states = document.getElementById('input_states').value;
 
-    // if(document.getElementById('ndfa').checked){
-    //   number_of_alphabet++;
-    // }
+    if(document.getElementById('ndfa').checked){
+      number_of_alphabet++;
+    }
 
     for (let index = 0; index < number_of_states; index++) {
         let row = table.insertRow(); 
@@ -105,11 +108,11 @@ function saveFA() {
   let DFA;
   
   // @TODO Fazer um método para transformar de ndfa em dfa
-  // if(document.getElementById('ndfa').checked){
-    // DFA = transformNDFAToDFA(NDFA);
-  // } else {
+  if(document.getElementById('ndfa').checked){
+    DFA = transformNDFAToDFA(NDFA);
+  } else {
     DFA = NDFA;
-  // }
+  }
 
   let RG = transformDFAIntoRG(DFA);
 
@@ -122,6 +125,37 @@ function saveFA() {
   console.log(array_all_FA);
   console.log(array_all_RG);
   console.log(array_name);
+}
+
+function transformNDFAToDFA(ndfa){
+  let haveEpsilonTransitions = false;
+  for (let index = 0; index < ndfa.length && !haveEpsilonTransitions; index++) {
+    if(ndfa[index]['Epsilon']) {
+      haveEpsilonTransitions = true;
+    }
+  }
+
+  let epsilonFecho = []
+  if(haveEpsilonTransitions) {
+    epsilonFecho = calculateEpsilonFecho(ndfa);
+  }
+}
+
+function calculateEpsilonFecho(ndfa){
+  let eachEpsilon = [];
+  for (let index = 0; index < ndfa.length; index++) {
+    eachEpsilon[index] = (ndfa[index]['Epsilon']).split(','); 
+  }
+  
+  let epsilonFecho = [];
+
+  for (let index = 0; index < ndfa.length; index++) {
+    epsilonFecho[index] = '' + index + ',' + ndfa[index]['Epsilon'];
+    // TODO usar eachEpsilon[index] para calcular cada epsilonFecho de novo
+    // for (let inside_index = 0; inside_index < array.length; inside_index++) {
+      // epsilonFecho[index] = epsilonFecho[index] + ndfa[]
+    // }
+  }
 }
 
 function transformDFAIntoRG(dfa){
@@ -1005,9 +1039,9 @@ function saveCFG() {
   let CFG_corrected = correctCFG(data);
   // let PDA = transformCFGIntoPDA(CFG_corrected);
 
-  // array_all_RG.push(CFG_corrected);
-  // array_name.push(name);
-  // addToSelector();
+  array_all_CFG.push(CFG_corrected);
+  array_name_CFG.push(name);
+  addToSelector();
 
   console.log(CFG_corrected);
   
