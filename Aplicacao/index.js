@@ -130,32 +130,88 @@ function saveFA() {
 function transformNDFAToDFA(ndfa){
   let haveEpsilonTransitions = false;
   for (let index = 0; index < ndfa.length && !haveEpsilonTransitions; index++) {
-    if(ndfa[index]['Epsilon']) {
+    if(ndfa[index]['epsilon']) {
       haveEpsilonTransitions = true;
     }
   }
 
-  let epsilonFecho = []
+  let epsilonFecho = [];
+  let newStates =[];
   if(haveEpsilonTransitions) {
     epsilonFecho = calculateEpsilonFecho(ndfa);
+    ndfa = calculateNDFAEpsilonFree(epsilonFecho, ndfa);
+  } else {
+    for (let index = 0; index < ndfa.length; index++) {
+      delete (ndfa[index])['epsilon'];
+    }
   }
+
+  dfa = calculateDFA(ndfa);
+
+}
+
+function calculateDFA(ndfa) {
+  
+}
+
+function calculateNDFAEpsilonFree(epsilonFecho, ndfa){
+  let newStates = [];
+  console.log(ndfa);
+  console.log(epsilonFecho);
+
+  let index = 0; //FOR 1
+  let isFinal = ''; // Dentro do for 1
+  let inside_index = 0; //FOR 2
+  newStates[index] = {statename: index.toString(), a: ndfa[parseInt(epsilonFecho[index][inside_index])]['a'] + ',' + ndfa[parseInt(epsilonFecho[index][inside_index+1])]['a'] }
+  if(ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != '' && ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != undefined){
+    isFinal = 's';
+  }
+
+  if(ndfa[parseInt(epsilonFecho[index][inside_index+1])]['final'] != '' && ndfa[parseInt(epsilonFecho[index][inside_index+1])]['final'] != undefined){
+    isFinal = 's';
+  }
+
+
+  newStates[index] = { ...newStates[index], final: isFinal}
+  console.log(newStates);
+
+  // TODO Fazer repetições pra cada um dos epsilonFecho[index]
 }
 
 function calculateEpsilonFecho(ndfa){
   let eachEpsilon = [];
   for (let index = 0; index < ndfa.length; index++) {
-    eachEpsilon[index] = (ndfa[index]['Epsilon']).split(','); 
+    if(ndfa[index]['epsilon'] != undefined && ndfa[index]['epsilon'] != ''){
+      eachEpsilon[index] = (ndfa[index]['epsilon']).split(',');
+    } else {
+      eachEpsilon[index] = [];
+    }
+    if(!eachEpsilon[index].includes(index.toString())){
+      eachEpsilon[index].unshift(index.toString());
+    }
+  }
+
+  let changed = true;
+  while(changed) {
+    changed = false;
+    for (let index = 0; index < eachEpsilon.length; index++) {
+      for (let inside_index = 0; inside_index < eachEpsilon[index].length; inside_index++) {
+        let aux = parseInt(eachEpsilon[index][inside_index]);
+
+        if(eachEpsilon[aux] != undefined){
+          for (let inside_inside_index = 0; inside_inside_index < eachEpsilon[aux].length; inside_inside_index++) {
+            if(!eachEpsilon[index].includes(eachEpsilon[aux][inside_inside_index])){
+              eachEpsilon[index].push(eachEpsilon[aux][inside_inside_index]);
+            }
+          }
+        }
+
+      }
+    }
   }
   
-  let epsilonFecho = [];
+  return eachEpsilon;
 
-  for (let index = 0; index < ndfa.length; index++) {
-    epsilonFecho[index] = '' + index + ',' + ndfa[index]['Epsilon'];
-    // TODO usar eachEpsilon[index] para calcular cada epsilonFecho de novo
-    // for (let inside_index = 0; inside_index < array.length; inside_index++) {
-      // epsilonFecho[index] = epsilonFecho[index] + ndfa[]
-    // }
-  }
 }
 
 function transformDFAIntoRG(dfa){
