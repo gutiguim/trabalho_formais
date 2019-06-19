@@ -30,24 +30,26 @@ Uma Expressão Regular por enquanto está sendo salva como o usuário digitou.
 
 
 Funcionamento:
+  Quando um Autômato é criado e salvo ele é automaticamente convertido em Gramática e quando uma Gramática é criada ela é automaticamente convertida em Autômato 
+  Finito Não Definido. Por enquanto a funcionalidade de converta Autômato Finito Não Definido em Autômato Finito Definido.
 
-Quando um Autômato é criado e salvo ele é automaticamente convertido em Gramática e quando uma Gramática é criada ela é automaticamente convertida em Autômato 
-Finito Não Definido. Por enquanto a funcionalidade de converta Autômato Finito Não Definido em Autômato Finito Definido.
-
-Para executar o programa você deverá abrir o arrquivo "index.html" no navegador de sua escolha.
+  Para executar o programa você deverá abrir o arrquivo "index.html" no navegador de sua escolha.
 
 Criação de autômato:
-Para criar um Autômato você deve informar o número de estados e o número de terminais e clicar no botão "Generate Table", após a tabela ser gerada você 
-deverá preencher os campos destinados ao seu Autômato, sempre respeitando o nome dos estados gerados.
+  Para criar um Autômato você deve informar o número de estados e o número de terminais e clicar no botão "Generate Table", após a tabela ser gerada você 
+  deverá preencher os campos destinados ao seu Autômato, sempre respeitando o nome dos estados gerados.
 
-Ao finalizar o preenchimento da tabela clique em salvar e seu Autômato será salvo no programa, convertido para Gramática Regular e esta última, também salva no programa.
+  Ao finalizar o preenchimento da tabela clique em salvar e seu Autômato será salvo no programa, convertido para Gramática Regular e esta última, também salva no programa.
+
+  Para fazer a união de 2 autômatos, você deverá primeiramente criar 2 autômatos, selecionar os dois autômatos no menu "DFA Union/Intersection" e clicar no botão Union, 
+  após isso o programa fará a união dos autômatos e salvará no programa.
 
 Criação de Gramática Regular:
-Para criar uma Gramática Regular você deve informar o número de produções e o número de terminais e clicar no botão "Generate Table" (caso você vá gerar uma gramática
-não fatorada, ou seja, com dois símbolos terminais iguais a esquerda de produções diferentes, cliquei no "check" do "Is it not factored?"), após a tabela ser gerada você 
-deverá preencher os campos destinados a sua gramática, sempre respeitando o nome dos estados gerados.
+  Para criar uma Gramática Regular você deve informar o número de produções e o número de terminais e clicar no botão "Generate Table" (caso você vá gerar uma gramática
+  não fatorada, ou seja, com dois símbolos terminais iguais a esquerda de produções diferentes, cliquei no "check" do "Is it not factored?"), após a tabela ser gerada você 
+  deverá preencher os campos destinados a sua gramática, sempre respeitando o nome dos estados gerados.
 
-Ao finalizar o preenchimento da tabela clique em salvar e sua Gramática será salva no programa, convertido para AFND e este último, também salvo no programa.
+  Ao finalizar o preenchimento da tabela clique em salvar e sua Gramática será salva no programa, convertido para AFND e este último, também salvo no programa.
 
 Criação de Expressão Regular:
-Escrever a sua Expressão Regular no campo "Regular Expression" and click save.
+  Escrever a sua Expressão Regular no campo "Regular Expression" and click save.

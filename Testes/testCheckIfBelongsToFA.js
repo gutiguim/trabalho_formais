@@ -4,7 +4,6 @@ Matrícula: 11200638
 */
 
 function checkIfBelongsToFA(finite_automate_to_test, sentence_to_test){
-  // @TODO Pegar de um seletor entre os nomes dos FA's o index e adicionar na variável index
 
   const sentence = sentence_to_test;
   const finite_automate = finite_automate_to_test;

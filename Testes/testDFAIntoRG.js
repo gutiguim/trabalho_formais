@@ -112,7 +112,7 @@ function transformDFAIntoRG(dfa){
 }
   
 function testDFAIntoRG() {
-  let aproved = true;
+  let aproved = false;
 
   let dfa = [];
   dfa[0] = {'statename': '0', 'a': '0', 'b': '1', 'final': ''};

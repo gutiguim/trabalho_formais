@@ -886,8 +886,8 @@ function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
   let union = [];
   for (let index = 0; index < (dfa1.length + dfa2.length + 1); index++) {
     union[index] = {};
-    union[index]['statename'] = index;
-    union[index]['final'] = false;
+    union[index]['statename'] = index.toString();
+    union[index]['final'] = '';
     for (let inside_index = 0; inside_index < leaderNumberOfAlphabet; inside_index++) {
       union[index][alphabet[inside_index]] = '';
     }
@@ -895,10 +895,25 @@ function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
 
   for (let index = 0; index < (leaderLength); index++) {
     if(dfa1[index]){  
-      union[index+1] = dfa1[index]
+      union[index+1] = dfa1[index];
+
+      for (var key in union[index+1]) {
+          if (union[index+1].hasOwnProperty(key)) {
+              if(key != 'statename' && key != 'final' && union[index+1][key].length != 0){
+                  union[index+1][key] = (parseInt(union[index+1][key]) + 1).toString();
+              }
+          }
+      }
     }
     if(dfa2[index]) {
       union[index+1+dfa1.length] = dfa2[index];
+      for (var key in union[index+1+dfa1.length]) {
+          if (union[index+1+dfa1.length].hasOwnProperty(key)) {
+              if(key != 'statename' && key != 'final' && union[index+1+dfa1.length][key].length != 0){
+                  union[index+1+dfa1.length][key] = (parseInt(union[index+1+dfa1.length][key]) + 1 + dfa1.length).toString();
+              }
+          }
+      }
     }
   }
 
@@ -923,7 +938,9 @@ function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
         }
         if(key != 'final') {
           if(union[0][key]){
-            union[0][key] += ',' + dfa2[0][key];
+            if(dfa2[0][key]){
+              union[0][key] += ',' + dfa2[0][key];
+            }
           } else {
             union[0][key] = dfa2[0][key];
           }
@@ -934,9 +951,7 @@ function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
 
   array_all_FA.push(union);
   array_name.push(array_name[selected1] + "UnionWith" + array_name[selected2]);
-  console.log("A");
   addToSelector();
-  console.log("B");
 
   return union;
 }
