@@ -34,6 +34,7 @@ var array_name = [];
 var array_all_RE = [];
 
 var array_all_CFG = [];
+var array_all_CNFCFG = [];
 var array_name_CFG = [];
 
 // FINITE AUTOMATE FUNCTIONS BEGIN
@@ -52,13 +53,6 @@ function generateFATable(){
     first_th.appendChild(first_text);
     row.appendChild(first_th);
 
-    if(document.getElementById('ndfa').checked){
-      let epsilon_th = document.createElement("th");
-      let epsilon_text = document.createTextNode("Epsilon");
-      epsilon_th.appendChild(epsilon_text);
-      row.appendChild(epsilon_th);
-    }
-
     for (let index = 0; index < number_of_alphabet; index++) {
         let th = document.createElement("th");
         let text = document.createTextNode(alphabet[index]);
@@ -74,10 +68,6 @@ function generateFATable(){
 
     // Building rows
     let number_of_states = document.getElementById('input_states').value;
-
-    if(document.getElementById('ndfa').checked){
-      number_of_alphabet++;
-    }
 
     for (let index = 0; index < number_of_states; index++) {
         let row = table.insertRow(); 
@@ -104,16 +94,8 @@ function saveFA() {
   }
 
   let table = document.getElementById('af_table');
-  let NDFA = tableToJson(table);
-  let DFA;
+  let DFA = tableToJson(table);
   
-  // @TODO Fazer um método para transformar de ndfa em dfa
-  if(document.getElementById('ndfa').checked){
-    DFA = transformNDFAToDFA(NDFA);
-  } else {
-    DFA = NDFA;
-  }
-
   let RG = transformDFAIntoRG(DFA);
 
   array_all_FA.push(DFA);
@@ -128,6 +110,13 @@ function saveFA() {
 }
 
 function transformNDFAToDFA(ndfa){
+  let ndfa_test = [
+    { a: '', b: '1', c: '2', epsilon: '0,1', final: '', statename: '0' },
+    { a: '0', b: '2', c: '0,1', epsilon: '', final: '', statename: '1' },
+    { a: '', b: '', c: '', epsilon: '', final: 's', statename: '2' },
+  ]
+  ndfa = ndfa_test;
+
   let haveEpsilonTransitions = false;
   for (let index = 0; index < ndfa.length && !haveEpsilonTransitions; index++) {
     if(ndfa[index]['epsilon']) {
@@ -146,34 +135,69 @@ function transformNDFAToDFA(ndfa){
     }
   }
 
-  dfa = calculateDFA(ndfa);
-
-}
-
-function calculateDFA(ndfa) {
-  
 }
 
 function calculateNDFAEpsilonFree(epsilonFecho, ndfa){
-  let newStates = [];
-  console.log(ndfa);
-  console.log(epsilonFecho);
+  // let newStates = [];
+  // let number_of_alphabet = document.getElementById('input_alphabet').value;
+  // console.log(ndfa);
+  // console.log(epsilonFecho);
 
-  let index = 0; //FOR 1
-  let isFinal = ''; // Dentro do for 1
-  let inside_index = 0; //FOR 2
-  newStates[index] = {statename: index.toString(), a: ndfa[parseInt(epsilonFecho[index][inside_index])]['a'] + ',' + ndfa[parseInt(epsilonFecho[index][inside_index+1])]['a'] }
-  if(ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != '' && ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != undefined){
-    isFinal = 's';
-  }
+  // let isFinal = '';
+  // for (let index = 0; index < epsilonFecho.length; index++) {
+  //   isFinal = '';
+  //   newStates[index] = { statename: index.toString() };
+  //   // console.log('newStates[index]:');
+  //   // console.log(newStates[index]);
+    
+  //   for (let inside_index = 0; inside_index < epsilonFecho[index].length; inside_index++) {
 
-  if(ndfa[parseInt(epsilonFecho[index][inside_index+1])]['final'] != '' && ndfa[parseInt(epsilonFecho[index][inside_index+1])]['final'] != undefined){
-    isFinal = 's';
-  }
+  //     for (let alphabet_index = 0; alphabet_index < number_of_alphabet; alphabet_index++) {
+  //       if(inside_index == 0 || newStates[index][alphabet[alphabet_index]] == '') {
+  //         newStates[index] = { ...newStates[index], [alphabet[alphabet_index]]: ndfa[parseInt(epsilonFecho[index][inside_index])][alphabet[alphabet_index]]}; 
+  //         // console.log('newStates[index] alphabet_inside ');
+  //         // console.log(newStates[index]);
+  //       } else {
+  //         let test = newStates[index][alphabet[alphabet_index]];
+  //         let test2 = ndfa[parseInt(epsilonFecho[index][inside_index])][alphabet[alphabet_index]];
+  //         console.log('TEST: ' + test);
+  //         // console.log('TEST2: ' + test2);
+  //         if(!test.includes(test2)){
+  //           let add_comma = test + ',' + test2;
+  //           console.log("ADD COMMA: " + add_comma);
+  //           newStates[index] = { ...newStates[index], [alphabet[alphabet_index]]: add_comma };
+  //         }
+  //       }
+  //     } 
+
+  //     // console.log('AAAAA');
+  //     // console.log(newStates);
+  //     if(ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != '' && ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != undefined){
+  //       isFinal = 's';
+  //     }
+  //   }
+  //   newStates[index] = { ...newStates[index], final: isFinal};
+  // }
+
+  // let index = 0; //FOR 1
+  // let isFinal = ''; // Dentro do for 1
+  // let inside_index = 0; //FOR 2
+  // newStates[index] = {
+  //   statename: index.toString(), 
+  //   a: ndfa[parseInt(epsilonFecho[index][inside_index])]['a'] + ',' + ndfa[parseInt(epsilonFecho[index][inside_index+1])]['a'] 
+  // }
+  // if(ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != '' && ndfa[parseInt(epsilonFecho[index][inside_index])]['final'] != undefined){
+  //   isFinal = 's';
+  // }
+
+  // if(ndfa[parseInt(epsilonFecho[index][inside_index+1])]['final'] != '' && ndfa[parseInt(epsilonFecho[index][inside_index+1])]['final'] != undefined){
+  //   isFinal = 's';
+  // }
 
 
-  newStates[index] = { ...newStates[index], final: isFinal}
-  console.log(newStates);
+  // newStates[index] = { ...newStates[index], final: isFinal}
+  // console.log("CHEGOU AQUI")
+  // console.log(newStates);
 
   // TODO Fazer repetições pra cada um dos epsilonFecho[index]
 }
@@ -416,26 +440,15 @@ function saveRG() {
 
   // Each "|" will have an own property on the RG_corrected array of objects
   let RG_corrected = correctRG(data);
-  let NDFA = transformRGIntoNDFA(RG_corrected);
-  let DFA;
+  let DFA = transformRGIntoNDFA(RG_corrected);
 
-  if(document.getElementById('rg_ndfa').checked){
-    // // @TODO Fazer um método para transformar de ndfa em dfa
-    // let DFA = transformNDFAToDFA(NDFA);
-  } else {
-    DFA = NDFA;
-  }
+  DFA = NDFA;
 
   array_all_FA.push(DFA);
   array_all_RG.push(RG_corrected);
   array_name.push(name);
   addToSelector();
   
-  // // @TODO Fazer um método para transformar de ndfa em dfa
-  // if(document.getElementById('ndfa').checked){
-  //   // data = transformNDFAToDFA(data);
-  // }
-
   console.log(array_all_FA);
   console.log(array_all_RG);
   console.log(array_name);
@@ -531,7 +544,122 @@ function transformRGIntoNDFA(rg_corrected){
 // RE FUNCTIONS BEGIN
 function saveRE(){
   let RE = document.getElementById("input_regular_expression").value;
-  array_all_RE.push(RE);
+  let ret = parseSub(RE, 0, RE.length, true);
+  if ( typeof ret == 'string'){
+    alert(ret);
+  } else {
+    array_all_RE.push(RE);
+  }
+}
+
+function parseSub(text, begin, end, first) {
+    var i,
+        sub,
+        last = 0,
+        node = {'begin': begin, 'end': end},
+        virNode,
+        tempNode,
+        stack = 0,
+        parts = [];
+    if (text.length === 0) {
+        return 'Error: empty input at ' + begin + '.';
+    }
+    if (first) {
+        for (i = 0; i <= text.length; i += 1) {
+            if (i === text.length || (text[i] === '|' && stack === 0)) {
+                if (last === 0 && i === text.length) {
+                    return parseSub(text, begin + last, begin + i, false);
+                }
+                sub = parseSub(text.substr(last, i - last), begin + last, begin + i, true);
+                if (typeof sub === 'string') {
+                    return sub;
+                }
+                parts.push(sub);
+                last = i + 1;
+            } else if (text[i] === '(') {
+                stack += 1;
+            } else if (text[i] === ')') {
+                stack -= 1;
+            }
+        }
+        if (parts.length === 1) {
+            return parts[0];
+        }
+        node.type = 'or';
+        node.parts = parts;
+    } else {
+        for (i = 0; i < text.length; i += 1) {
+            if (text[i] === '(') {
+                last = i + 1;
+                i += 1;
+                stack = 1;
+                while (i < text.length && stack !== 0) {
+                    if (text[i] === '(') {
+                        stack += 1;
+                    } else if (text[i] === ')') {
+                        stack -= 1;
+                    }
+                    i += 1;
+                }
+                if (stack !== 0) {
+                    return 'Error: missing right bracket for ' + (begin + last) + '.';
+                }
+                i -= 1;
+                sub = parseSub(text.substr(last, i - last), begin + last, begin + i, true);
+                if (typeof sub === 'string') {
+                    return sub;
+                }
+                sub.begin -= 1;
+                sub.end += 1;
+                parts.push(sub);
+            } else if (text[i] === '*') {
+                if (parts.length === 0) {
+                    return 'Error: unexpected * at ' + (begin + i) + '.';
+                }
+                tempNode = {'begin': parts[parts.length - 1].begin, 'end': parts[parts.length - 1].end + 1};
+                tempNode.type = 'star';
+                tempNode.sub = parts[parts.length - 1];
+                parts[parts.length - 1] = tempNode;
+            } else if (text[i] === '+') {
+                if (parts.length === 0) {
+                    return 'Error: unexpected + at ' + (begin + i) + '.';
+                }
+                virNode = {'begin': parts[parts.length - 1].begin, 'end': parts[parts.length - 1].end + 1};
+                virNode.type = 'star';
+                virNode.sub = parts[parts.length - 1];
+                tempNode = {'begin': parts[parts.length - 1].begin, 'end': parts[parts.length - 1].end + 1};
+                tempNode.type = 'cat';
+                tempNode.parts = [parts[parts.length - 1], virNode];
+                parts[parts.length - 1] = tempNode;
+            } else if (text[i] === '?') {
+                if (parts.length === 0) {
+                    return 'Error: unexpected + at ' + (begin + i) + '.';
+                }
+                virNode = {'begin': parts[parts.length - 1].begin, 'end': parts[parts.length - 1].end + 1};
+                virNode.type = 'empty';
+                virNode.sub = parts[parts.length - 1];
+                tempNode = {'begin': parts[parts.length - 1].begin, 'end': parts[parts.length - 1].end + 1};
+                tempNode.type = 'or';
+                tempNode.parts = [parts[parts.length - 1], virNode];
+                parts[parts.length - 1] = tempNode;
+            } else if (text[i] === 'ϵ') {
+                tempNode = {'begin': begin + i, 'end': begin + i + 1};
+                tempNode.type = 'empty';
+                parts.push(tempNode);
+            } else {
+                tempNode = {'begin': begin + i, 'end': begin + i + 1};
+                tempNode.type = 'text';
+                tempNode.text = text[i];
+                parts.push(tempNode);
+            }
+        }
+        if (parts.length === 1) {
+            return parts[0];
+        }
+        node.type = 'cat';
+        node.parts = parts;
+    }
+    return node;
 }
 // RE FUNCTIONS END
 
@@ -709,47 +837,6 @@ function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
     dfa2 = array_all_FA[selected2];
   }
 
-  // DELETAR
-  // dfa1 = [
-  //   {
-  //     statename: '0',
-  //     a: '0',
-  //     b: '1',
-  //     final: 's'
-  //   },
-  //   {
-  //     statename: '1',
-  //     a: '1',
-  //     b: '1',
-  //     final: 's'
-  //   },
-  // ]
-
-  // dfa2 = [
-  //   {
-  //     statename: '0',
-  //     a: '1',
-  //     b: '0',
-  //     c: '0',
-  //     final: ''
-  //   },
-  //   {
-  //     statename: '1',
-  //     a: '1',
-  //     b: '1',
-  //     c: '2',
-  //     final: ''
-  //   },
-  //   {
-  //     statename: '2',
-  //     a: '2',
-  //     b: '2',
-  //     c: '2',
-  //     final: 's'
-  //   },
-  // ]
-  // DELETAR
-
   let number_of_alphabet1 = 0;
   let number_of_alphabet2 = 0;
 
@@ -790,8 +877,6 @@ function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
     let letter = '';
     for (let index = number_of_alphabet1; index < number_of_alphabet2; index++) {
       letter = alphabet[index];
-      console.log("Letter: " + letter);
-      // dfa1 = { ...dfa1, letter: ''}; 
       for (let inside_index = 0; inside_index < dfa1.length; inside_index++) {
         dfa1[inside_index] = { ...dfa1[inside_index], [letter]: ''};
       }   
@@ -865,53 +950,6 @@ function dfaIntersection() {
 
   let dfa1 = array_all_FA[selected1];
   let dfa2 = array_all_FA[selected2];
-  console.log(dfa1);
-
-  // DELETAR
-  dfa1 = [
-    {
-      statename: '0',
-      a: '0',
-      b: '1',
-      final: 's'
-    },
-    {
-      statename: '1',
-      a: '1',
-      b: '1',
-      final: 's'
-    },
-  ];
-
-  console.log("DFA1");
-  console.log(dfa1);
-  // TODO ACONTECENDO BUG?!?!?!?!?!?!?!?!?!?
-
-
-  dfa2 = [
-    {
-      statename: '0',
-      a: '1',
-      b: '0',
-      c: '0',
-      final: ''
-    },
-    {
-      statename: '1',
-      a: '1',
-      b: '1',
-      c: '2',
-      final: ''
-    },
-    {
-      statename: '2',
-      a: '2',
-      b: '2',
-      c: '2',
-      final: 's'
-    },
-  ];
-  // DELETAR
 
   let number_of_alphabet1 = 0;
   let number_of_alphabet2 = 0;
@@ -962,11 +1000,6 @@ function dfaIntersection() {
 
   number_of_alphabet1 = leaderNumberOfAlphabet;
   number_of_alphabet2 = leaderNumberOfAlphabet;
-  
-  console.log("DFA1");
-  console.log(dfa1);
-  console.log("DFA2");
-  console.log(dfa2);
 
   let complementDfa1 = complement(dfa1, number_of_alphabet1);
   let complementDfa2 = complement(dfa2, number_of_alphabet2);
@@ -1095,14 +1128,14 @@ function saveCFG() {
   let CFG_corrected = correctCFG(data);
   // let PDA = transformCFGIntoPDA(CFG_corrected);
 
+
   array_all_CFG.push(CFG_corrected);
   array_name_CFG.push(name);
-  addToSelector();
+  addToSelectorCFG();
 
   console.log(CFG_corrected);
-  
   console.log(array_all_CFG);
-  console.log(array_name);
+  console.log(array_name_CFG);
 }
 
 // Cleans the CFG -> Remove whitespaces and separate it on object properties
@@ -1123,3 +1156,4 @@ function correctCFG(data){
 
   return corrected_cfg;
 }
+// CGF FUNCTIONS END
