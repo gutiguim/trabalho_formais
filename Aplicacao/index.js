@@ -37,6 +37,9 @@ var array_all_CFG = [];
 var array_all_CNFCFG = [];
 var array_name_CFG = [];
 
+var array_all_NDFA = [];
+var array_name_NDFA = [];
+
 // FINITE AUTOMATE FUNCTIONS BEGIN
 // This function generate a representations of an empty Finite Automaton 
 function generateFATable(){
@@ -95,18 +98,25 @@ function saveFA() {
 
   let table = document.getElementById('af_table');
   let DFA = tableToJson(table);
+  console.log("DFA CREATED:");
+  console.log(name);
+  console.log(DFA);
   
   let RG = transformDFAIntoRG(DFA);
+  console.log("DFA TRANSFORMED INTO RG:");
+  console.log(RG);
 
   array_all_FA.push(DFA);
   array_all_RG.push(RG);
   array_name.push(name);
 
   addToSelector();
+
+  clearTableFA();
   
-  console.log(array_all_FA);
-  console.log(array_all_RG);
-  console.log(array_name);
+  // console.log(array_all_FA);
+  // console.log(array_all_RG);
+  // console.log(array_name);
 }
 
 function transformNDFAToDFA(ndfa){
@@ -437,21 +447,30 @@ function saveRG() {
 
   let table = document.getElementById('rg_table');
   let data = tableToJson(table);
+  console.log("RG CREATED:");
+  console.log(name);
+  console.log(data);
 
   // Each "|" will have an own property on the RG_corrected array of objects
   let RG_corrected = correctRG(data);
+  console.log("RG CORRECTED (each '|' will have an own property):");
+  console.log(RG_corrected);
+
   let DFA = transformRGIntoNDFA(RG_corrected);
-
-  DFA = NDFA;
-
-  array_all_FA.push(DFA);
-  array_all_RG.push(RG_corrected);
-  array_name.push(name);
-  addToSelector();
+  console.log("RG TRANSFORMED INTO NDFA:");
+  console.log(DFA);
   
-  console.log(array_all_FA);
-  console.log(array_all_RG);
-  console.log(array_name);
+  // array_all_FA.push(DFA);
+  array_all_RG.push(RG_corrected);
+  array_all_NDFA.push(DFA)
+  array_name_NDFA.push(name);
+  // addToSelector();
+  
+  clearTableRG();
+
+  // console.log(array_all_FA);
+  // console.log(array_all_RG);
+  // console.log(array_name);
 }
 
 // Cleans the RG -> Remove whitespaces and separate it on object properties
@@ -516,7 +535,7 @@ function transformRGIntoNDFA(rg_corrected){
               }
               break
               default:
-              window.alert("ERROR");
+              window.alert("NOT A RG");
               break;
           }
         }
@@ -550,6 +569,8 @@ function saveRE(){
   } else {
     array_all_RE.push(RE);
   }
+  console.log('RE CREATED:');
+  console.log(RE);
 }
 
 function parseSub(text, begin, end, first) {
@@ -709,6 +730,30 @@ function addToSelectorName(nameOfSelector) {
   select.appendChild(el);
 }
 
+function clearTableFA() {
+  let table = document.getElementById('af_table');
+  let length = table.rows.length
+  for (let index = 0; index < length; index++) {
+    table.deleteRow(0);
+  }
+}
+
+function clearTableRG() {
+  let table = document.getElementById('rg_table');
+  let length = table.rows.length
+  for (let index = 0; index < length; index++) {
+    table.deleteRow(0);
+  }
+}
+
+function clearTableCFG() {
+  let table = document.getElementById('cfg_table');
+  let length = table.rows.length
+  for (let index = 0; index < length; index++) {
+    table.deleteRow(0);
+  }
+}
+
 // GENERAL FUNCTIONS END
 
 // DFA MINIMIZATION BEGIN
@@ -817,6 +862,11 @@ function minimizeDFA(){
 
   array_all_FA.push(dfaAlive);
   array_name.push(array_name[selected] + "Minimized");
+
+  console.log('DFA MINIMIZED CREATED:');
+  console.log(array_name[selected] + "Minimized");
+  console.log(dfaAlive);
+
   addToSelector();
 
   return dfaAlive;
@@ -951,6 +1001,11 @@ function dfaUnion(dfa1 = undefined, dfa2 = undefined) {
 
   array_all_FA.push(union);
   array_name.push(array_name[selected1] + "UnionWith" + array_name[selected2]);
+
+  console.log("UNION CREATED:");
+  console.log(array_name[selected1] + "UnionWith" + array_name[selected2]);
+  console.log(union);
+
   addToSelector();
 
   return union;
@@ -1138,19 +1193,25 @@ function saveCFG() {
 
   let table = document.getElementById('cfg_table');
   let data = tableToJson(table);
+  console.log('CFG CREATED:');
+  console.log(data);
 
   // Each "|" will have an own property on the RG_corrected array of objects
   let CFG_corrected = correctCFG(data);
+  console.log('CFG CORRECTED:');
+  console.log(CFG_corrected);
   // let PDA = transformCFGIntoPDA(CFG_corrected);
 
 
   array_all_CFG.push(CFG_corrected);
   array_name_CFG.push(name);
-  addToSelectorCFG();
+  // addToSelectorCFG();
 
-  console.log(CFG_corrected);
-  console.log(array_all_CFG);
-  console.log(array_name_CFG);
+  clearTableCFG();
+
+  // console.log(CFG_corrected);
+  // console.log(array_all_CFG);
+  // console.log(array_name_CFG);
 }
 
 // Cleans the CFG -> Remove whitespaces and separate it on object properties
